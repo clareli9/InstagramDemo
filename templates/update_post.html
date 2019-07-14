@@ -1,0 +1,13 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+<h1> Update Post </h1>
+{% comment %} The multipart/form-date is necessary when need to upload photos/videos {% endcomment %}
+<form action = "" method = "post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type = "submit">Save</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+
+{% extends "index.html" %}
+
+{% block content %}
+
+<h2>Sign Up</h2>
+{% comment %} Also need the form {% endcomment %}
+<form method = "post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type = "submit">Sign Up</button>
+</form>
+
+{% endblock %}

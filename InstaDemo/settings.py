@@ -26,7 +26,7 @@ SECRET_KEY = '($l=3d_bnlfumt%fi$mmy!w7yckh_bmj1yw1s_zg*7o&z36fby'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+##ALLOWED_HOSTS = [*]
 
 # Application definition
 
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Insta',
+    'imagekit',
 ]
 
 MIDDLEWARE = [
@@ -118,4 +119,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+## Check the document to see the difference between below two variables
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+LOGIN_REDIRECT_URL = 'home'
+
+LOGOUT_REDIRECT_URL = 'home'
+
+# Use my own custom user model
+AUTH_USER_MODEL = 'Insta.InstaUser'

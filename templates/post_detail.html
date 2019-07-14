@@ -1,0 +1,16 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+
+<p> {{object.title}} </p>
+<image src = "/{{object.image}}">
+
+<div> 
+    {% comment %} The post.id could be referred from migration {% endcomment %}
+    {% comment %} Which is primary key {% endcomment %}
+    <a href = "{% url 'update_post' post.id %}">Update Post Title</a>
+    <a href = "{% url 'delete_post' post.id %}">Delete Post </a>
+</div>
+
+{% endblock %}
