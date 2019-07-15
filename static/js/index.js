@@ -10,9 +10,11 @@ function error_cb(error) {
  */
 
 function create_like(success_cb, error_cb) {
+    // Find the html  
     var post_pk = $(this).siblings('.hidden-data').find('.post-pk').text();
     console.log(post_pk);
 
+    // The activation after liking one post
     $.ajax({
         type: "POST",
         url: '/like',
