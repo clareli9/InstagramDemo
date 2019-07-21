@@ -25,7 +25,7 @@ SECRET_KEY = '($l=3d_bnlfumt%fi$mmy!w7yckh_bmj1yw1s_zg*7o&z36fby'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-#ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = ['18.191.224.55']
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -49,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'InstaDemo.urls'
@@ -122,6 +123,13 @@ USE_TZ = True
 ## Check the document to see the difference between below two variables
 STATIC_URL = '/static/'
 
+## For static files upload
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 LOGIN_REDIRECT_URL = 'home'
@@ -130,3 +138,5 @@ LOGOUT_REDIRECT_URL = 'home'
 
 # Use my own custom user model
 AUTH_USER_MODEL = 'Insta.InstaUser'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
