@@ -27,7 +27,7 @@ class InstaUser(AbstractUser):
 
     def get_absolute_url(self):
         # After update user profile
-        return reverse("user_profile", args = [str(self.id)])
+        return reverse("profile", args = [str(self.id)])
 
     def __str__(self):
         return self.username
@@ -51,7 +51,7 @@ class UserConnection(models.Model):
 class Post(models.Model):
     author = models.ForeignKey(InstaUser,
                                 on_delete = models.CASCADE,
-                                related_name = 'insta_posts',
+                                related_name = 'posts',
                                 blank = True,
                                 null = True)
     title = models.TextField(blank = True, null = True)
@@ -73,7 +73,7 @@ class Post(models.Model):
     
     def get_absolute_url(self):
         # After create one model (like: user press the submit button), need to go to this url
-        return reverse("post_detail", args = [str(self.id)])
+        return reverse("post", args = [str(self.id)])
 
     def get_like_count(self):
         return self.likes.count()

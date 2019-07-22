@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from Insta.models import Post, InstaUser, Like, Comment 
+from Insta.models import Post, InstaUser, Like, Comment, UserConnection
 from Insta.forms import CustomUserCreationForm
 
 from annoying.decorators import ajax_request
@@ -16,17 +16,37 @@ class HelloDjango(TemplateView):
 # Mixin is something like interface in Java
 class PostListView(LoginRequiredMixin, ListView):
     model = Post
-    template_name = 'posts.html'
+    template_name = 'home.html'
     # The reason why no need reverse, it's the use of Mixin interface
     login_url = "login"
+    '''
+    def get_queryset(self):
+        current_user = self.request.user
+        following = set()
+        for conn in UserConnection.objects.filter(creator=current_user).select_related('following'):
+            following.add(conn.following)
+        return Post.objects.filter(author__in=following)
+    '''
 
-class PostDetailView(DetailView):
+class PostDetailView(LoginRequiredMixin, DetailView):
     model = Post 
     template_name = "post_detail.html"
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        liked = Like.objects.filter(post=self.kwargs.get('pk'), user=self.request.user).first()
+        if liked:
+            data['liked'] = 1
+        else:
+            data['liked'] = 0
+        return data
+    
+class ExploreView(LoginRequiredMixin, ListView):
+    model = Post
+    template_name = 'explore.html'
+    login_url = 'login'
 
-class BlogDetailView(DetailView):
-    model = Post 
-    template_name = "post_detail.html"
+    def get_queryset(self):
+        return Post.objects.all().order_by('-posted_on')[:20]
 
 # Let the user to input information (all fields)
 class PostCreateView(CreateView):
@@ -37,13 +57,14 @@ class PostCreateView(CreateView):
 # Let the user to modify information (only title field)
 class PostUpdateView(UpdateView):
     model = Post 
-    template_name = "update_post.html"
+    template_name = "post_edit.html"
     fields = ('title',)
 
 class PostDeleteView(DeleteView):
     model = Post 
-    template_name = "delete_post.html"
+    template_name = "post_delete.html"
     success_url = reverse_lazy('home')
+
 
 class SignupView(CreateView):
     form_class = CustomUserCreationForm
@@ -52,14 +73,16 @@ class SignupView(CreateView):
     success_url = reverse_lazy('login')  
 
 # The view for insta users profile
-class UserDetail(DetailView):
+class UserProfile(LoginRequiredMixin, DetailView):
     model = InstaUser
     template_name = "user_profile.html"
+    login_url = 'login'
 
-class EditProfile(UpdateView):
+class EditProfile(LoginRequiredMixin, UpdateView):
     model = InstaUser
     template_name = "edit_profile.html"
     fields = ('username', 'profile_pic')
+    login_url = 'login'
 
 @ajax_request
 def toggleFollow(request):
